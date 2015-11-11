@@ -1,0 +1,26 @@
+---
+# (required) number of people
+people: 8
+
+# (required) ounces of edible protein per person
+ounces_per_person: 12
+
+# (required) list of food you want to incorporate into your boil
+foods:
+    "crawfish":
+        # (required) this would mean crawfish would make up 60% of the meal
+        ratio: 0.6
+        # (required) this is an estimation of how edible the raw thing is,
+        # crawfish have a lot of shell so consider only 20% of it's total
+        # weight to be edible
+        edible_percentage: 0.20
+        # (required) estimated price per pound
+        price_per_pound: 3
+    "shrimp":
+        ratio: 0.2
+        edible_percentage: 0.25
+        price_per_pound: 7
+    "sausage":
+        ratio: 0.2
+        edible_percentage: 1
+        price_per_pound: 5
