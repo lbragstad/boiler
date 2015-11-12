@@ -38,17 +38,52 @@ def _calculate_meal_weight(plan):
 
 
 def boil(plan):
-    total_protein_weight = _calculate_meal_weight(plan)
+    """Determine the weight and price of a meal plan.
 
-    report = list()
+    This method expects a dictionary that contains the number of guests, ounces
+    of food per person, and list of menu items. It will return the menu items
+    in a list. Each item in the list is a tuple containing the item name, the
+    ounces to buy from the store, and the estimated price of the item for the
+    meal.
+
+    :param plan: a dictionary containing the meal plan
+    :returns: a list of tuples with calculated facts about the meal items
+
+    """
+
+    # calculate the total weight of the meal in ounces
+    total_meal_weight = _calculate_meal_weight(plan)
+
+    # get all the foods
     foods = plan.get('foods')
+
+    # process every item in the meal plan
+    report = list()
     for food in foods:
-        food_ounces = total_protein_weight * foods.get(food).get('ratio')
-        store_ounces = food_ounces * (
-            (1 - foods.get(food).get('edible_percentage') + 1)
-        )
-        price = (store_ounces / 16) * foods.get(food).get('price_per_pound')
-        summary = food, round(store_ounces, 2), round(price, 2)
+
+        # find the specific percentage of food needed
+        food_ounces_needed = total_meal_weight * foods.get(food).get('ratio')
+
+        # determine the raw weight, in ounces, of a specific food since this is
+        # what you'll need to get from the store
+        non_edible_percentage = 1 - foods.get(food).get('edible_percentage')
+
+        # total weight multiplier of edible and non-edible bits, we
+        # use this to determine the total weight in what we need to buy from
+        # the store in order to feed everyone the proper ratio
+        food_multiplier = non_edible_percentage + 1
+
+        # calculate the total ounces need from the store, i.e. just tell this
+        # to the guy behind the counter
+        raw_ounces = food_ounces_needed * food_multiplier
+
+        # based on the raw_ounces and the estimated price per pound, determine
+        # the total cost of the item, in pounds
+        price = (raw_ounces / 16) * foods.get(food).get('price_per_pound')
+
+        # pack the name of the food, the total ounces needed from the store,
+        # and the estimated price in a tuple and append it to the report
+        summary = food, raw_ounces, price
         report.append(summary)
 
     return report
@@ -68,7 +103,7 @@ def main():
     for item in report:
         print "%r pounds of %s: $%r" % (round(item[1] / 16, 2),
                                         item[0],
-                                        item[2])
+                                        round(item[2], 2))
         total_price += item[2]
     print "%r ounces of food per person" % meal_plan.get('ounces_per_person')
     print "total cost: $%r" % round(total_price, 2)
