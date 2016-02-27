@@ -38,6 +38,18 @@ def _calculate_meal_weight(plan):
     return plan.get('people') * plan.get('ounces_per_person')
 
 
+def _check_meal_plan_makes_sense(plan):
+    """Check to make sure the values of the meal add up to 100%."""
+    # get all the foods
+    foods = plan.get('foods')
+    total_ratio = 0
+    for food in plan.get('foods'):
+        total_ratio += foods.get(food).get('ratio')
+    if not total_ratio == 1:
+        raise Exception('Meal ratios should equal a total of 1. Total ratio '
+                        'given was %r' % total_ratio)
+
+
 def boil(plan):
     """Determine the weight and price of a meal plan.
 
@@ -96,6 +108,9 @@ def main():
 
     # parse the meal plan from yaml
     meal_plan = _parse_yaml(yaml_file)
+
+    # make sure the ratios in the meal plan equal 1, or 100% of the meal
+    _check_meal_plan_makes_sense(meal_plan)
 
     # determine ratios!
     report, number_of_people = boil(meal_plan)
