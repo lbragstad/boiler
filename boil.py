@@ -10,8 +10,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""Calculator for estimating ratios and prices of meals."""
+
 import argparse
-import os
 
 import yaml
 
@@ -21,7 +22,7 @@ def _get_args():
     parser = argparse.ArgumentParser(
         prog='seafood-boil',
         description='Calculate seafood boil ratios.')
-    parser.add_argument('-i', '--input', type=str,
+    parser.add_argument('-i', '--input', type=str, required=True,
                         help='Meal plan to parse. Detailed in a .yaml file')
     args = parser.parse_args()
     return args.input
@@ -50,7 +51,6 @@ def boil(plan):
     :returns: a list of tuples with calculated facts about the meal items
 
     """
-
     # calculate the total weight of the meal in ounces
     total_meal_weight = _calculate_meal_weight(plan)
 
@@ -86,10 +86,11 @@ def boil(plan):
         summary = food, raw_ounces, price
         report.append(summary)
 
-    return report
+    return (report, plan.get('people'))
 
 
 def main():
+    """Main entry point for the boil calculator."""
     # get the location of the yaml file that describes the meal plan
     yaml_file = _get_args()
 
@@ -97,16 +98,19 @@ def main():
     meal_plan = _parse_yaml(yaml_file)
 
     # determine ratios!
-    report = boil(meal_plan)
+    report, number_of_people = boil(meal_plan)
+
+    # print the number of people partaking
+    print ("for %r people you'll need:" % number_of_people)
 
     total_price = float()
     for item in report:
-        print "%r pounds of %s: $%r" % (round(item[1] / 16, 2),
-                                        item[0],
-                                        round(item[2], 2))
+        print ("-  %r pounds of %s: $%r" % (round(item[1] / 16, 2),
+                                            item[0],
+                                            round(item[2], 2)))
         total_price += item[2]
-    print "%r ounces of food per person" % meal_plan.get('ounces_per_person')
-    print "total cost: $%r" % round(total_price, 2)
+    print ("%r ounces of food per person" % meal_plan.get('ounces_per_person'))
+    print ("total cost: $%r" % round(total_price, 2))
 
 
 if __name__ == '__main__':

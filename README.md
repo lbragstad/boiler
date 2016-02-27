@@ -36,7 +36,7 @@ foods:
         # crawfish have a lot of shell so consider only 20% of it's total
         # weight to be edible
         edible_percentage: 0.20
-        # (required) estimated price per pound
+        # (required) estimated price per pound in USD
         price_per_pound: 3
     "shrimp":
         ratio: 0.2
@@ -52,9 +52,10 @@ Calculate your shopping list and get an estimate.
 
 ```
 boiler >>> python boil.py -i crawfish.yaml
-6.48 pounds of crawfish: $19.44
-1.2 pounds of sausage: $6.0
-2.1 pounds of shrimp: $14.7
+for 8 people you'll need:
+-  6.48 pounds of crawfish: $19.44
+-  1.2 pounds of sausage: $6.0
+-  2.1 pounds of shrimp: $14.7
 12 ounces of food per person
 total cost: $40.14
 ```
