@@ -100,7 +100,7 @@ def boil(plan):
         summary = food, raw_ounces, price
         report.append(summary)
 
-    return (report, plan.get('people'))
+    return report
 
 
 def main():
@@ -115,10 +115,10 @@ def main():
     _validate_meal_plan(meal_plan)
 
     # determine ratios!
-    report, number_of_people = boil(meal_plan)
+    report = boil(meal_plan)
 
     # print the number of people partaking
-    print ("for %r people you'll need:" % number_of_people)
+    print ("for %r people you'll need:" % meal_plan.get('people'))
 
     total_price = float()
     for item in report:
