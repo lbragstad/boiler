@@ -46,8 +46,10 @@ def _check_meal_plan_makes_sense(plan):
     for food in plan.get('foods'):
         total_ratio += foods.get(food).get('ratio')
     if not total_ratio == 1:
-        raise Exception('Meal ratios should equal a total of 1. Total ratio '
-                        'given was %r' % total_ratio)
+        raise ValueError(
+            'Meal ratios should equal a total of 1. '
+            'Total ratio given was %d' % total_ratio
+        )
 
 
 def boil(plan):
