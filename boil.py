@@ -38,7 +38,7 @@ def _calculate_meal_weight(plan):
     return plan.get('people') * plan.get('ounces_per_person')
 
 
-def _check_meal_plan_makes_sense(plan):
+def _validate_meal_plan(plan):
     """Check to make sure the values of the meal add up to 100%."""
     # get all the foods
     foods = plan.get('foods')
@@ -112,7 +112,7 @@ def main():
     meal_plan = _parse_yaml(yaml_file)
 
     # make sure the ratios in the meal plan equal 1, or 100% of the meal
-    _check_meal_plan_makes_sense(meal_plan)
+    _validate_meal_plan(meal_plan)
 
     # determine ratios!
     report, number_of_people = boil(meal_plan)
