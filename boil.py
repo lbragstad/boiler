@@ -118,16 +118,16 @@ def main():
     report = boil(meal_plan)
 
     # print the number of people partaking
-    print ("for %r people you'll need:" % meal_plan.get('people'))
+    print ("for %d people you'll need:" % meal_plan.get('people'))
 
     total_price = float()
     for item in report:
-        print ("-  %r pounds of %s: $%r" % (round(item[1] / 16, 2),
-                                            item[0],
-                                            round(item[2], 2)))
+        print ("- %s pounds of %s: $%s" % (format(item[1] / 16, '.2f'),
+                                           item[0],
+                                           format(item[2], '.2f')))
         total_price += item[2]
-    print ("%r ounces of food per person" % meal_plan.get('ounces_per_person'))
-    print ("total cost: $%r" % round(total_price, 2))
+    print ("%d ounces of food per person" % meal_plan.get('ounces_per_person'))
+    print ("total cost: $%s" % format(total_price, '.2f'))
 
 
 if __name__ == '__main__':
